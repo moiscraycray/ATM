@@ -21,6 +21,7 @@ greeting then method of menu. Include 'back' button
 
 @balance = 1000.0
 
+puts
 puts "Hello, welcome to awesome ATM."
 
 def menu
@@ -80,5 +81,8 @@ def deposit
 end
 
 def exit
-  puts "Thank you for using Awesome ATM. Have a good day :)"
+  puts
+  puts "Thank you for using Awesome ATM. Have a good day :)\n\n"
 end
+
+menu
