@@ -19,14 +19,14 @@ MVP = minimal viable product
 greeting then method of menu. Include 'back' button
 =end
 
-@balance = 1000.00
+@balance = 1000
 
 puts
-puts "Hello, welcome to awesome ATM."
+puts "Hello, welcome to Awesome ATM."
 
 #users encounter menu first and enter their preference
 def menu
-  puts "Would you like to: \n\n"
+  puts "\nWould you like to: \n\n"
   puts "Make a [w]ithdrawal"
   puts "Check your [b]alance"
   puts "Make a [d]eposit"
@@ -42,10 +42,10 @@ def menu
     when "d"
       deposit
     when "x"
-      ex
+      puts "\n\nThank you for using Awesome ATM. Have a good day :)\n\n"
+      exit
     else
-      puts
-      puts "Invalid input, please try again."
+      puts "\nInvalid input, please try again.\n\n"
       menu
   end
 end
@@ -56,48 +56,72 @@ def bal
   menu #calls the menu method to enable user input again
 end
 
-def back
-  menu
-end
-
 def withdrawal
-  puts "How much would you like to withdraw? Press [b] to go back to menu."
-  back unless @with == "b"
-  #If user goes back to menu, need to stop the rest of the code. Maybe try different variable for back input
-  begin
-    @with = Integer(gets.chomp.to_f)#This checks if user is inputting valid numbers
-    rescue ArgumentError
-    puts "Invalid input, please try again"
-    retry
-  end
-  if @with > @balance
-    puts "You have insufficient funds. Please enter smaller amount.\n\n"
-    withdrawal #If user wants to withdraw more than balance, it will ask for different amount
-  else
-    @balance -= @with
-    puts "Please take your money.\n\n"
-    puts "Your remaining balance is $#{@balance}. \n\n"
+  puts "How much would you like to withdraw? Press [b] to go back to menu.\n\n"
+  @num = gets.chomp
+
+=begin
+This code block will determine whether user wants to go back to menu.
+If they enter an integer, the code will convert user-input to integer from string.
+=end
+  back = 0
+  if @num == "b"
+    back = 1 #This ensures the next if/else code does NOT run
     menu
+  else
+    back = 0 #This ensures the next if/else code runs
+    @with = @num.to_i #This converts user-input to integer
   end
+
+  if back == 0
+    if (@with > 0) && (@with <= @balance)
+      @balance -= @with
+      puts "\nPlease take your money.\n\n"
+      puts "Your remaining balance is $#{@balance}. \n\n\n"
+      menu
+    elsif @with > @balance
+      puts "You have insufficient funds. Please enter smaller amount."
+      withdrawal
+    else
+      puts "\nInvalid input, please try again.\n\n" #This runs if user entered 0/negative integer/strings
+      withdrawal
+    end
+  end
+
 end
 
 def deposit
-  puts "How much would you like to deposit?"
-  begin
-    @dep = Integer(gets.chomp.to_f)
-    rescue ArgumentError
-    puts "Invalid input, please try again"
-    retry
-  end
-  @balance += @dep
-  puts "You have deposited $#{@dep} into your account."
-  menu
-end
+  puts "How much would you like to deposit? Press [b] to go back to menu.\n\n"
+  @num = gets.chomp
 
-#need to figure out how to end program. exit? end?
-def ex
-  puts
-  puts "Thank you for using Awesome ATM. Have a good day :)\n\n"
+=begin
+This code block uses the same code from withdrawal for the 'back' feature.
+=end
+  back = 0
+  if @num == "b"
+    back = 1
+    menu
+  else
+    back = 0
+    @dep = @num.to_i
+  end
+
+  if back == 0
+    if (@dep < 10000) && (@dep > 0)
+      @balance += @dep
+      puts "\nYou have deposited $#{@dep} into your account.\n\n\n"
+      menu
+    elsif @dep >= 10_000
+      @balance += @dep
+      puts "\nYou have deposited $#{@dep} into your account.\n"
+      puts "Your deposit has exceeded the threshold transaction. A record will be sent to AUSTRAC.\n\n\n"
+      menu
+    else
+      puts "\nInvalid input, please try again.\n\n"
+      deposit
+    end
+  end
+
 end
 
 menu
