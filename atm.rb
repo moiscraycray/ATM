@@ -19,10 +19,9 @@ MVP = minimal viable product
 greeting then method of menu. Include 'back' button
 =end
 
-@balance = 1000
+@balance = 1000.0
 
-puts
-puts "Hello, welcome to Awesome ATM."
+puts "\nHello, welcome to Awesome ATM."
 
 #users encounter menu first and enter their preference
 def menu
@@ -52,7 +51,8 @@ end
 
 #Simple method showing their account balance
 def bal
-  puts "You have $#{@balance} in your account. \n\n"
+  @round = @balance.round(2)
+  puts "You have $#{@round} in your account. \n\n"
   menu #calls the menu method to enable user input again
 end
 
@@ -70,14 +70,15 @@ If they enter an integer, the code will convert user-input to integer from strin
     menu
   else
     back = 0 #This ensures the next if/else code runs
-    @with = @num.to_i #This converts user-input to integer
+    @with = @num.to_f #This converts user-input to float
   end
 
   if back == 0
     if (@with > 0) && (@with <= @balance)
       @balance -= @with
+      @round = @balance.round(2) #This rounds to 2 decimal places
       puts "\nPlease take your money.\n\n"
-      puts "Your remaining balance is $#{@balance}. \n\n\n"
+      puts "Your remaining balance is $#{@round}. \n\n\n"
       menu
     elsif @with > @balance
       puts "You have insufficient funds. Please enter smaller amount."
@@ -103,17 +104,19 @@ This code block uses the same code from withdrawal for the 'back' feature.
     menu
   else
     back = 0
-    @dep = @num.to_i
+    @dep = @num.to_f
   end
 
   if back == 0
-    if (@dep < 10000) && (@dep > 0)
+    if (@dep < 10_000) && (@dep > 0)
       @balance += @dep
-      puts "\nYou have deposited $#{@dep} into your account.\n\n\n"
+      @round = @balance.round(2)
+      puts "\nYou have deposited $#{@round} into your account.\n\n\n"
       menu
     elsif @dep >= 10_000
       @balance += @dep
-      puts "\nYou have deposited $#{@dep} into your account.\n"
+      @round = @balance.round(2)
+      puts "\nYou have deposited $#{@round} into your account.\n"
       puts "Your deposit has exceeded the threshold transaction. A record will be sent to AUSTRAC.\n\n\n"
       menu
     else
